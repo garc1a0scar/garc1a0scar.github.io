@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contacts — [Your Names]</title>
+  <style>
+    :root{ --fg:#0f172a; --muted:#475569; --ring:rgba(0,0,0,.08); --maxw:1080px }
+    body{ margin:0; font-family: ui-sans-serif, system-ui; color:var(--fg) }
+    .container{ max-width:var(--maxw); margin:auto; padding:2rem 1rem }
+    .card{ border:1px solid rgba(0,0,0,.06); border-radius:1rem; padding:1rem; box-shadow:0 4px 14px var(--ring); margin-bottom:1rem }
+    .muted{ color:var(--muted) }
+    .topnav{ padding:1rem; border-bottom:1px solid rgba(0,0,0,.06) }
+    .topnav a{ margin-right:.8rem }
+    .grid{ display:grid; gap:1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) }
+    input, textarea{ width:100%; padding:.8rem 1rem; border:1px solid rgba(0,0,0,.12); border-radius:.7rem; font:inherit }
+    .btn{ display:inline-block; padding:.8rem 1rem; border:1px solid #0f172a; border-radius:.8rem }
+  </style>
+</head>
+<body>
+  <div class="topnav">
+    <a href="index.html">← Back</a>
+    <a href="seats.html">Seats</a>
+  </div>
+
+  <main class="container">
+    <h1>Contacts & Logistics</h1>
+
+    <section class="grid">
+      <div class="card">
+        <h3>Event Coordinator</h3>
+        <p class="muted">[Name], +52 [Phone], <a href="mailto:[email]">[email]</a></p>
+      </div>
+      <div class="card">
+        <h3>Transportation</h3>
+        <p class="muted">Shuttles depart 4:00 PM from [Hotel]. Return shuttles every hour from 10:00 PM.</p>
+      </div>
+      <div class="card">
+        <h3>Emergency Contact</h3>
+        <p class="muted">[Name], +52 [Phone]</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Message Us</h3>
+      <!-- Option A: mailto (simple) -->
+      <form action="mailto:[your_email]?subject=Wedding%20Question" method="post" enctype="text/plain">
+        <label>
+          Name
+          <input required name="name" />
+        </label><br/><br/>
+        <label>
+          Message
+          <textarea required name="message" rows="4"></textarea>
+        </label><br/><br/>
+        <button class="btn" type="submit">Send Email</button>
+      </form>
+      <!-- Option B: replace with your own endpoint (Cloud Run, Formspree, etc.) -->
+    </section>
+
+    <section class="card">
+      <h3>Map</h3>
+      <p class="muted">Click to open maps to the venue.</p>
+      <p><a class="btn" href="https://maps.google.com/?q=Hacienda" target="_blank" rel="noopener">Open in Google Maps</a></p>
+    </section>
+  </main>
+</body>
+</html>
