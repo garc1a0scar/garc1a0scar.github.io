@@ -1,18 +1,174 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <title>my-first-website</title>
-  <LINK href="styles.css" rel="stylesheet" type="text/css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ale & Oscar — Wedding Invitation</title>
+  <meta name="description" content="Join us for our wedding celebration. RSVP and details inside." />
+  <meta property="og:title" content="You're invited — Ale & Oscar" />
+  <meta property="og:description" content="Date • Venue • RSVP" />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#111827" />
+
+  <!-- Tailwind via CDN (free) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #2dd4bf; }
+    .font-display { font-family: 'Playfair Display', serif; }
+    .font-sans { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
+    .grain { position: relative; }
+    .grain:before { content:""; position:absolute; inset:0; background-image:url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbGw9J2JsYWNrJyBvcGFjaXR5PScwLjAnLz48ZmlsdGVyIGlkPSdncmFpbic+PGZlVHVyYnVsZW5jZSB0eXBlPSdmcmFjdGFsTm9pc2UnIGJhc2VGcmVxdWVuY3k9JzAuOCcgbnVtT2N0YXZlcz0nMScgc3RpdGNoVGlsZXM9J3N0aXRjaCcvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNncmFpbi knLz48L3N2Zz4='); mix-blend-mode: overlay; opacity:.15; pointer-events:none; }
+  </style>
+
+  <script>
+    // Optional simple gate (not secure, but good enough to hide planning links):
+    // Set ACCESS_CODE below. If empty, the page shows normally.
+    const ACCESS_CODE = ""; // e.g., "Riesling2025"
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!ACCESS_CODE) return;
+      const ok = localStorage.getItem('invite_ok');
+      if (ok === ACCESS_CODE) return;
+      const entered = prompt('Enter access code');
+      if (entered === ACCESS_CODE) {
+        localStorage.setItem('invite_ok', ACCESS_CODE);
+      } else {
+        document.body.innerHTML = '<div class="min-h-screen grid place-items-center bg-neutral-50 text-neutral-800 font-sans"><div class="p-6 rounded-2xl shadow-sm bg-white text-center max-w-md"><h1 class="text-2xl font-semibold">Access required</h1><p class="mt-2">Please ask the couple for the access code.</p></div></div>';
+      }
+    });
+  </script>
 </head>
+<body class="bg-neutral-50 text-neutral-800 font-sans">
+  <!-- Header / Hero -->
+  <header class="relative grain">
+    <div class="absolute inset-0 bg-gradient-to-b from-neutral-900 to-neutral-800"></div>
+    <img alt="Hero" class="absolute inset-0 w-full h-full object-cover opacity-30" src="https://images.unsplash.com/photo-1460364157752-926555421a7e?q=80&w=2000&auto=format&fit=crop"/>
+    <div class="relative mx-auto max-w-5xl px-6 py-24 sm:py-28 text-center text-white">
+      <p class="uppercase tracking-[0.25em] text-sm/6 text-teal-200">You're invited</p>
+      <h1 class="mt-4 font-display text-5xl sm:text-6xl md:text-7xl">Oscar & Partner</h1>
+      <p class="mt-6 text-base/7 sm:text-lg/8 opacity-90">Saturday • April 18, 2026 • CDMX</p>
+      <div class="mt-10 flex items-center justify-center gap-3">
+        <a href="#rsvp" class="rounded-2xl px-5 py-3 bg-teal-300/90 hover:bg-teal-300 text-neutral-900 font-medium shadow">RSVP</a>
+        <a href="#details" class="rounded-2xl px-5 py-3 border border-white/30 hover:border-white/80 font-medium">Details</a>
+      </div>
+    </div>
+  </header>
 
-<body>
+  <!-- Countdown (pure JS) -->
+  <section class="mx-auto max-w-5xl px-6 py-14" id="countdown">
+    <div class="rounded-3xl bg-white p-8 md:p-10 shadow-sm border border-neutral-100 grid md:grid-cols-2 gap-8 items-center">
+      <div>
+        <h2 class="font-display text-3xl">The countdown</h2>
+        <p class="text-neutral-600 mt-2">We can't wait to celebrate with you.</p>
+      </div>
+      <div class="grid grid-cols-4 gap-3 text-center">
+        <div class="rounded-2xl bg-neutral-50 p-4"><div class="text-3xl font-semibold" id="d">--</div><div class="text-xs uppercase tracking-wide">Days</div></div>
+        <div class="rounded-2xl bg-neutral-50 p-4"><div class="text-3xl font-semibold" id="h">--</div><div class="text-xs uppercase tracking-wide">Hours</div></div>
+        <div class="rounded-2xl bg-neutral-50 p-4"><div class="text-3xl font-semibold" id="m">--</div><div class="text-xs uppercase tracking-wide">Minutes</div></div>
+        <div class="rounded-2xl bg-neutral-50 p-4"><div class="text-3xl font-semibold" id="s">--</div><div class="text-xs uppercase tracking-wide">Seconds</div></div>
+      </div>
+    </div>
+    <script>
+      // Set your wedding date/time (local time). Example: 2026-04-18 17:00 local
+      const weddingDate = new Date('2026-04-18T17:00:00');
+      const ids = ['d','h','m','s'];
+      const tick = () => {
+        const diff = weddingDate - new Date();
+        const s = Math.max(0, Math.floor(diff / 1000));
+        const d = Math.floor(s / 86400);
+        const h = Math.floor((s % 86400) / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const ss = s % 60;
+        const vals = [d,h,m,ss];
+        ids.forEach((id,i)=>document.getElementById(id).textContent = String(vals[i]).padStart(2,'0'))
+      };
+      tick();
+      setInterval(tick, 1000);
+    </script>
+  </section>
 
-<img src="https://octodex.github.com/images/daftpunktocat-thomas.gif" id="octocat" alt="octocat-gif" />
+  <!-- Details -->
+  <section id="details" class="mx-auto max-w-5xl px-6 py-14">
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="rounded-3xl bg-white p-7 border border-neutral-100 shadow-sm">
+        <h3 class="font-display text-2xl">Ceremony</h3>
+        <p class="mt-2 text-neutral-600">Iglesia de San Example<br/>4:30 PM</p>
+      </div>
+      <div class="rounded-3xl bg-white p-7 border border-neutral-100 shadow-sm">
+        <h3 class="font-display text-2xl">Reception</h3>
+        <p class="mt-2 text-neutral-600">Hacienda Lorem Ipsum<br/>7:00 PM</p>
+      </div>
+      <div class="rounded-3xl bg-white p-7 border border-neutral-100 shadow-sm">
+        <h3 class="font-display text-2xl">Dress Code</h3>
+        <p class="mt-2 text-neutral-600">Formal (black-tie optional)</p>
+      </div>
+    </div>
+  </section>
 
-<!-- Change this code here by copy and pasting your template on line 15 -->
-<p>Welcome to your first GitHub Pages website!</p>
+  <!-- Map Embed (replace with your venue) -->
+  <section class="mx-auto max-w-5xl px-6 py-14">
+    <div class="rounded-3xl overflow-hidden border border-neutral-100 shadow-sm">
+      <iframe title="Venue Map" class="w-full h-[360px]" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60272.17655390361!2d-99.2080981!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff36f2b1f3fb%3A0x77f1a3f15b174!2sMexico%20City!5e0!3m2!1sen!2smx!4v1685800000000"></iframe>
+    </div>
+  </section>
 
+  <!-- RSVP -->
+  <section id="rsvp" class="mx-auto max-w-3xl px-6 py-14">
+    <div class="rounded-3xl bg-white p-8 md:p-10 border border-neutral-100 shadow-sm">
+      <h2 class="font-display text-3xl">RSVP</h2>
+      <p class="text-neutral-600 mt-2">Please confirm your attendance by March 15, 2026.</p>
+      <!-- Replace the src with your Google Form "iframe embed" URL (free) -->
+      <div class="mt-6 aspect-[16/12] rounded-2xl overflow-hidden border border-neutral-100">
+        <iframe title="RSVP Form" class="w-full h-full" src="https://docs.google.com/forms/d/e/1FAIpQLSf-example/viewform?embedded=true">Loading…</iframe>
+      </div>
+      <p class="text-xs text-neutral-500 mt-3">Tip: Pre-fill guest name via URL params like <code>?guest=Ana%20Lopez</code> and read it with JS to personalize your greeting above.</p>
+    </div>
+  </section>
+
+  <!-- Story / Timeline -->
+  <section class="mx-auto max-w-5xl px-6 py-14">
+    <h2 class="font-display text-3xl text-center">Our story</h2>
+    <div class="mt-8 grid md:grid-cols-3 gap-6">
+      <div class="rounded-3xl bg-white p-7 border border-neutral-100 shadow-sm"><h3 class="font-semibold">2018</h3><p class="text-neutral-600 mt-1">We met over coffee and code reviews.</p></div>
+      <div class="rounded-3xl bg-white p-7 border border-neutral-100 shadow-sm"><h3 class="font-semibold">2022</h3><p class="text-neutral-600 mt-1">Adopted Riesling 🐶 and many plants.</p></div>
+      <div class="rounded-3xl bg-white p-7 border border-neutral-100 shadow-sm"><h3 class="font-semibold">2026</h3><p class="text-neutral-600 mt-1">We say “I do.”</p></div>
+    </div>
+  </section>
+
+  <!-- Registry / Gifts -->
+  <section class="mx-auto max-w-5xl px-6 py-14">
+    <div class="rounded-3xl bg-neutral-900 text-white p-8 md:p-10 shadow-sm">
+      <h2 class="font-display text-3xl">Gifts</h2>
+      <p class="mt-2 text-neutral-300">Your presence is the best gift. If you'd like to contribute to our honeymoon, here are some options:</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a class="px-5 py-3 rounded-2xl bg-white text-neutral-900 font-medium" href="#" target="_blank" rel="noopener">Honeymoon Fund</a>
+        <a class="px-5 py-3 rounded-2xl border border-white/30 font-medium" href="#" target="_blank" rel="noopener">Registry</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mx-auto max-w-5xl px-6 py-12">
+    <div class="rounded-3xl bg-white border border-neutral-100 shadow-sm p-6 text-center text-sm text-neutral-500">
+      <p>Made with ❤️ & Tailwind. Hosted on GitHub Pages (free). Designed by Oscar (Data Engineer magic ✨).</p>
+      <p class="mt-2">Questions? <a href="mailto:you@example.com" class="underline">you@example.com</a></p>
+    </div>
+    <p class="text-center text-xs text-neutral-400 mt-4">© 2026 Oscar & Partner</p>
+  </footer>
+
+  <script>
+    // Personalize greeting from URL param (e.g., ?guest=Ana%20Lopez)
+    const u = new URL(location.href);
+    const guest = u.searchParams.get('guest');
+    if (guest) {
+      const hero = document.querySelector('header .relative .mt-6');
+      const el = document.createElement('p');
+      el.className = 'mt-4 text-sm sm:text-base opacity-90';
+      el.textContent = `Dear ${guest}, we can\'t wait to celebrate with you.`;
+      hero.insertAdjacentElement('afterend', el);
+    }
+  </script>
 </body>
 </html>
