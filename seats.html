@@ -31,17 +31,33 @@
 
     /* header */
     header{border-bottom:1px solid var(--line); background:#fff}
-    .h1{
+    .h1 {
       font-family: "Georgia", "Times New Roman", Times, serif;
       font-size: clamp(2.4rem, 7vw, 5.2rem);
-      line-height: 1.05; letter-spacing: .02em;
+      line-height: 1.05;
+      letter-spacing: .02em;
       margin: 2.2rem 0 1.2rem;
-      opacity:0; transform: translateY(26px);
+      opacity: 0;
+      transform: translateY(40px); /* start lower */
       filter: blur(6px);
       will-change: transform, opacity, filter;
     }
-    .h1.in{ animation: pop .9s cubic-bezier(.2,.8,.2,1) forwards }
-    @keyframes pop { to { opacity:1; transform:none; filter:none } }
+
+    .h1.in {
+      animation: slideUpFade .9s cubic-bezier(.2, .8, .2, 1) forwards;
+    }
+
+    @keyframes slideUpFade {
+      0% {
+        opacity: 0;
+        transform: translateY(40px);
+        filter: blur(6px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
 
     /* number row */
     .nums{
