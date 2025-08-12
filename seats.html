@@ -3,89 +3,234 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Seats — [Your Names]</title>
+  <title>Find your seat — [Your Names]</title>
   <style>
-    :root{ --fg:#0f172a; --muted:#475569; --ring:rgba(0,0,0,.08); --maxw:1080px }
-    body{ margin:0; font-family: ui-sans-serif, system-ui; color:var(--fg) }
-    .container{ max-width:var(--maxw); margin:auto; padding:2rem 1rem }
-    .card{ border:1px solid rgba(0,0,0,.06); border-radius:1rem; padding:1rem; box-shadow:0 4px 14px var(--ring) }
-    .muted{ color:var(--muted) }
-    .grid{ display:grid; gap:1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin-top:1rem }
-    .seat{ border:1px solid rgba(0,0,0,.06); border-radius:.9rem; padding:.9rem }
-    input[type="search"]{ width:100%; padding:.9rem 1rem; border:1px solid rgba(0,0,0,.12); border-radius:.8rem; font:inherit }
-    a{ color:inherit; text-decoration:none }
-    .topnav{ padding:1rem; border-bottom:1px solid rgba(0,0,0,.06) }
-    .topnav a{ margin-right:.8rem }
-    .highlight{ outline:2px solid #0f172a; outline-offset:2px }
+    :root{
+      --bg:#f6f7f8;
+      --fg:#0f172a;
+      --muted:#94a3b8;
+      --line:#e5e7eb;
+      --ring:rgba(0,0,0,.06);
+      --maxw:1200px;
+    }
+    /* base */
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--fg);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    }
+    .wrap{max-width:var(--maxw); margin-inline:auto; padding-inline:1.2rem}
+
+    /* fixed top menu (if you want links back) */
+    .topnav{position:fixed; inset:0 0 auto 0; height:56px; z-index:40;
+      backdrop-filter:saturate(160%) blur(6px);
+      background:rgba(255,255,255,.88); border-bottom:1px solid var(--line)}
+    .topnav .inner{height:56px; display:flex; align-items:center; justify-content:space-between}
+    .topnav a{color:inherit; text-decoration:none; padding:.4rem .6rem; border-radius:.5rem}
+    .spacer{height:56px} /* prevents content from sliding under fixed bar */
+
+    /* header */
+    header{border-bottom:1px solid var(--line); background:#fff}
+    .h1{
+      font-family: "Georgia", "Times New Roman", Times, serif;
+      font-size: clamp(2.4rem, 7vw, 5.2rem);
+      line-height: 1.05; letter-spacing: .02em;
+      margin: 2.2rem 0 1.2rem;
+      opacity:0; transform: translateY(26px);
+      filter: blur(6px);
+      will-change: transform, opacity, filter;
+    }
+    .h1.in{ animation: pop .9s cubic-bezier(.2,.8,.2,1) forwards }
+    @keyframes pop { to { opacity:1; transform:none; filter:none } }
+
+    /* number row */
+    .nums{
+      display:flex; gap:1.2rem; justify-content:center; align-items:center;
+      padding: .8rem 0 1.2rem; user-select:none;
+    }
+    .nums a{
+      font-family: "Georgia", "Times New Roman", Times, serif;
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      color: var(--muted); text-decoration:none;
+      padding:.3rem .4rem; border-radius:.4rem; transition: color .2s ease, transform .2s ease;
+    }
+    .nums a:hover{ transform:translateY(-2px) }
+    .nums a[aria-current="page"]{ color: var(--fg); font-weight: 600 }
+
+    /* content split */
+    .panel{
+      display:grid; grid-template-columns: 1fr 1fr; gap:2rem;
+      min-height: 60vh; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+      background:#fff;
+    }
+    .left, .right{ padding: 3rem 2rem }
+    .left{
+      display:flex; align-items:center; justify-content:center; border-right:1px solid var(--line);
+    }
+    .big{
+      font-family: "Georgia", "Times New Roman", Times, serif;
+      font-size: clamp(8rem, 18vw, 22rem);
+      font-weight: 400; color:#232323; line-height: .8;
+    }
+    .right ul{ list-style:none; margin:0; padding:0 }
+    .right li{ padding:.35rem 0; font-size: clamp(.95rem, 1.2vw, 1.05rem) }
+    .muted{ color:#64748b }
+
+    /* small screens */
+    @media (max-width: 900px){
+      .panel{ grid-template-columns: 1fr }
+      .left{ border-right:none; border-bottom:1px solid var(--line) }
+      .left, .right{ padding: 2rem 1.2rem }
+    }
   </style>
 </head>
 <body>
-  <div class="topnav">
-    <a href="index.html">← Back</a>
-    <a href="contact.html">Contacts</a>
-  </div>
-  <main class="container">
-    <h1>Seating</h1>
-    <p class="muted">Search your name or jump to a table with a hash, e.g. <code>#2</code>.</p>
-
-    <div class="card">
-      <input id="q" type="search" placeholder="Search your name…" aria-label="Search your name" />
-      <div id="tables" class="grid" aria-live="polite" aria-busy="false"></div>
+  <!-- Fixed menu (optional) -->
+  <nav class="topnav">
+    <div class="wrap inner">
+      <a href="index.html">← Back</a>
+      <div>
+        <a href="contact.html">Contacts</a>
+        <a href="[YOUR_RSVP_LINK]" class="muted">RSVP</a>
+      </div>
     </div>
+  </nav>
+  <div class="spacer" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <!-- Header -->
+<header>
+  <div class="wrap">
+    <h1 id="title" class="h1">Find your seat</h1>
+    <input 
+      id="search" 
+      type="search" 
+      placeholder="Search your name…" 
+      aria-label="Search your name"
+      style="
+        width:100%;max-width:400px;
+        padding:0.6rem 0.8rem;
+        font-size:1rem;
+        margin:0 auto 1rem;
+        display:block;
+        border:1px solid var(--line);
+        border-radius:0.5rem;
+        background:#fff;
+      "
+    />
+    <div id="nums" class="nums" role="tablist" aria-label="Tables"></div>
+  </div>
+</header>
+
+  <!-- Content -->
+  <main class="panel" id="panel" aria-live="polite">
+    <section class="left" aria-labelledby="table-label">
+      <div class="big" id="table-label">1</div>
+    </section>
+    <section class="right">
+      <div class="wrap">
+        <p class="muted" id="guest-count"></p>
+        <ul id="guest-list"></ul>
+      </div>
+    </section>
   </main>
 
   <script>
-    // Example data — replace with your final assignments
-    // You can generate this JSON from a spreadsheet if you want.
+    // ---------- data (replace with your real seating) ----------
     const seatingPlan = [
-      { table: 1, guests: ["Ana Gómez", "Luis Pérez", "Mariana Silva", "Pablo Díaz"] },
-      { table: 2, guests: ["Oscar Garcia", "Riesling 🐶 (not seated)", "Rocío Franco", "Carlos López"] },
-      { table: 3, guests: ["Inés Morales", "Daniel Ruiz", "Sofía Torres", "Jorge Álvarez"] },
-      { table: 4, guests: ["Lucía Hernández", "Mateo Vargas", "Valeria Soto", "Emilio Ríos"] }
+      { table: 1, guests: ["Michael Johnson","Jennifer Smith","David Williams","Jessica Brown","John Miller","Emily Davis"] },
+      { table: 2, guests: ["Osvaldo Garcia","Rocío Franco","Carlos López","Ana Gómez","Mariana Silva","Pablo Díaz"] },
+      { table: 3, guests: ["Inés Morales","Daniel Ruiz","Sofía Torres","Jorge Álvarez"] },
+      { table: 4, guests: ["Lucía Hernández","Mateo Vargas","Valeria Soto","Emilio Ríos"] },
+      { table: 5, guests: ["Guest A","Guest B","Guest C","Guest D"] },
+      { table: 6, guests: ["Guest E","Guest F","Guest G"] },
+      { table: 7, guests: ["Guest H","Guest I"] },
+      { table: 8, guests: ["Guest J","Guest K"] },
+      { table: 9, guests: ["Guest L","Guest M","Guest N"] },
+      { table: 10, guests: ["Guest O","Guest P"] },
     ];
+    // -----------------------------------------------------------
 
-    const tablesEl = document.getElementById('tables');
-    const q = document.getElementById('q');
+    const nums = document.getElementById('nums');
+    const tableLabel = document.getElementById('table-label');
+    const guestList = document.getElementById('guest-list');
+    const guestCount = document.getElementById('guest-count');
+    const title = document.getElementById('title');
 
-    function render(filter="") {
-      tablesEl.innerHTML = "";
-      const f = filter.trim().toLowerCase();
-      const matches = [];
-
-      seatingPlan.forEach(t => {
-        const g = t.guests.filter(name => name.toLowerCase().includes(f));
-        if (!f || g.length) matches.push({table: t.table, guests: g.length ? g : t.guests});
-      });
-
-      matches.sort((a,b)=>a.table-b.table).forEach(({table, guests})=>{
-        const div = document.createElement('div');
-        div.className = 'seat';
-        div.id = `table-${table}`;
-        div.innerHTML = `
-          <h3>Table ${table}</h3>
-          <ul>${guests.map(x=>`<li>${x}</li>`).join("")}</ul>
-        `;
-        tablesEl.appendChild(div);
-      });
-    }
-
-    // Deep link: seats.html#2 highlights table 2
-    function jumpToHash() {
-      const n = location.hash.replace('#','').trim();
-      if (!n) return;
-      const target = document.getElementById(`table-${Number(n)}`);
-      if (target) {
-        target.scrollIntoView({behavior:'smooth', block:'center'});
-        target.classList.add('highlight');
-        setTimeout(()=>target.classList.remove('highlight'), 2200);
+    // Build the number row as links (#1, #2, …)
+    function renderNumberRow(active){
+      nums.innerHTML = '';
+      const max = Math.max(...seatingPlan.map(t=>t.table));
+      for (let i=1;i<=max;i++){
+        const a = document.createElement('a');
+        a.href = `#${i}`;
+        a.setAttribute('role','tab');
+        a.textContent = i;
+        if (i === active) a.setAttribute('aria-current','page');
+        nums.appendChild(a);
       }
     }
 
-    q.addEventListener('input', e => render(e.target.value));
-    window.addEventListener('hashchange', jumpToHash);
+    function showTable(n){
+      const data = seatingPlan.find(t=>t.table===n) || seatingPlan[0];
+      // Update big number and list
+      tableLabel.textContent = data.table;
+      guestList.innerHTML = data.guests.map(g=>`<li>${g}</li>`).join('');
+      guestCount.textContent = `${data.guests.length} guest${data.guests.length!==1?'s':''} at table ${data.table}`;
+      // Update active number style
+      [...nums.querySelectorAll('a')].forEach(a=>{
+        if (a.hash === `#${n}`) a.setAttribute('aria-current','page');
+        else a.removeAttribute('aria-current');
+      });
+    }
 
-    render();
-    jumpToHash();
+    // Deep links (#3, #7…)
+    function currentFromHash(){
+      const n = parseInt(location.hash.replace('#',''),10);
+      return Number.isFinite(n) ? n : seatingPlan[0].table;
+    }
+
+    // Keyboard nav (←/→)
+    function arrowNav(e){
+      if (e.key!=='ArrowLeft' && e.key!=='ArrowRight') return;
+      const max = Math.max(...seatingPlan.map(t=>t.table));
+      let n = currentFromHash();
+      if (e.key==='ArrowLeft') n = n>1 ? n-1 : max;
+      if (e.key==='ArrowRight') n = n<max ? n+1 : 1;
+      location.hash = `#${n}`;
+    }
+
+    // Init
+    function init(){
+    
+    function init(){
+      // header pop-in
+      requestAnimationFrame(()=>title.classList.add('in'));
+
+      const active = currentFromHash();
+      renderNumberRow(active);
+      showTable(active);
+
+      window.addEventListener('hashchange', ()=>showTable(currentFromHash()));
+      window.addEventListener('keydown', arrowNav, {passive:true});
+
+      // NEW: search guests
+      const searchInput = document.getElementById('search');
+      searchInput.addEventListener('input', e => {
+        const query = e.target.value.trim().toLowerCase();
+        if (!query) {
+          location.hash = `#${seatingPlan[0].table}`;
+          return;
+        }
+        for (const { table, guests } of seatingPlan) {
+          if (guests.some(name => name.toLowerCase().includes(query))) {
+            location.hash = `#${table}`;
+            return;
+          }
+        }
+      });
+    }
+    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
