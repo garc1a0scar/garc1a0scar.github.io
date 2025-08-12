@@ -114,18 +114,32 @@
     </div>
   </section>
 
-  <!-- RSVP -->
-  <section id="rsvp" class="mx-auto max-w-3xl px-6 py-14">
-    <div class="rounded-3xl bg-white p-8 md:p-10 border border-neutral-100 shadow-sm">
-      <h2 class="font-display text-3xl">RSVP</h2>
-      <p class="text-neutral-600 mt-2">Please confirm your attendance by March 15, 2026.</p>
-      <!-- Replace the src with your Google Form "iframe embed" URL (free) -->
-      <div class="mt-6 aspect-[16/12] rounded-2xl overflow-hidden border border-neutral-100">
-        <iframe title="RSVP Form" class="w-full h-full" src="https://docs.google.com/forms/d/e/1FAIpQLSf-example/viewform?embedded=true">Loading…</iframe>
-      </div>
-      <p class="text-xs text-neutral-500 mt-3">Tip: Pre-fill guest name via URL params like <code>?guest=Ana%20Lopez</code> and read it with JS to personalize your greeting above.</p>
+  <!-- RSVP (secure external form link with prefill) -->
+<section id="rsvp" class="mx-auto max-w-3xl px-6 py-14">
+  <div class="rounded-3xl bg-white p-8 md:p-10 border border-neutral-100 shadow-sm text-center">
+    <h2 class="font-display text-3xl">RSVP</h2>
+    <p class="text-neutral-600 mt-2">Please confirm your attendance by <strong>March 15, 2026</strong>.</p>
+
+    <div class="mt-8 flex items-center justify-center">
+      <!-- This button is wired by JS to your Google Form with prefilled guest name -->
+      <a id="rsvp-link" href="#" target="_blank" rel="noopener"
+         class="rounded-2xl px-6 py-3 bg-teal-300/90 hover:bg-teal-300 text-neutral-900 font-medium shadow inline-flex items-center gap-2">
+        <span>Open secure RSVP form</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+          <path d="M13.5 4.5a.75.75 0 0 0 0 1.5h4.19l-6.22 6.22a.75.75 0 1 0 1.06 1.06l6.22-6.22v4.19a.75.75 0 0 0 1.5 0v-6a.75.75 0 0 0-.75-.75h-6Z"/>
+          <path d="M6 5.25A2.25 2.25 0 0 0 3.75 7.5v12A2.25 2.25 0 0 0 6 21.75h12A2.25 2.25 0 0 0 20.25 19.5v-7.5a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 1-.75.75H6a.75.75 0 0 1-.75-.75v-12A.75.75 0 0 1 6 6.75h7.5a.75.75 0 0 0 0-1.5H6Z"/>
+        </svg>
+      </a>
     </div>
-  </section>
+
+    <p class="text-xs text-neutral-500 mt-4">
+      Your responses are collected securely in Google Forms/Sheets. No guest data lives on this site or in the GitHub repo.
+    </p>
+    <noscript>
+      <p class="mt-4"><a href="#" target="_blank" rel="noopener">Open RSVP Form</a> (JavaScript is required for name prefill.)</p>
+    </noscript>
+  </div>
+</section>
 
   <!-- Story / Timeline -->
   <section class="mx-auto max-w-5xl px-6 py-14">
@@ -159,16 +173,29 @@
   </footer>
 
   <script>
-    // Personalize greeting from URL param (e.g., ?guest=Ana%20Lopez)
-    const u = new URL(location.href);
-    const guest = u.searchParams.get('guest');
-    if (guest) {
-      const hero = document.querySelector('header .relative .mt-6');
-      const el = document.createElement('p');
-      el.className = 'mt-4 text-sm sm:text-base opacity-90';
-      el.textContent = `Dear ${guest}, we can\'t wait to celebrate with you.`;
-      hero.insertAdjacentElement('afterend', el);
-    }
-  </script>
+  // ---- RSVP secure link + prefill ----
+  // 1) Replace FORM_BASE with your Google Form base URL ("viewform" not "formResponse")
+  //    Example: https://docs.google.com/forms/d/e/1FAIpQLSfXXXXXXXXXXXX/viewform
+  // 2) Replace ENTRY_NAME with the field id for "Guest name" (looks like entry.1234567890).
+  //    Find it via Form → Get pre-filled link, fill a sample name, generate link, copy the entry param name.
+
+  const u = new URL(location.href);
+  const guest = u.searchParams.get('guest');
+
+  const FORM_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSf-your-form-id/viewform'; // <-- change me
+  const ENTRY_NAME = 'entry.1234567890'; // <-- change me
+
+  const makeRsvpUrl = (name) => {
+    const url = new URL(FORM_BASE);
+    url.searchParams.set('usp', 'pp_url'); // prefill mode
+    if (name) url.searchParams.set(ENTRY_NAME, name);
+    return url.toString();
+  };
+
+  const rsvpAnchor = document.getElementById('rsvp-link');
+  if (rsvpAnchor) {
+    rsvpAnchor.href = makeRsvpUrl(guest || '');
+  }
+</script>
 </body>
 </html>
