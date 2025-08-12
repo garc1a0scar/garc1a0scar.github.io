@@ -26,7 +26,7 @@
   <script>
     // Optional simple gate (not secure, but good enough to hide planning links):
     // Set ACCESS_CODE below. If empty, the page shows normally.
-    const ACCESS_CODE = "BodaPaixican"; // e.g., "Riesling2025"
+    const ACCESS_CODE = "BodaPaixican";
     document.addEventListener('DOMContentLoaded', () => {
       if (!ACCESS_CODE) return;
       const ok = localStorage.getItem('invite_ok');
@@ -46,9 +46,9 @@
     <div class="absolute inset-0 bg-gradient-to-b from-neutral-900 to-neutral-800"></div>
     <img alt="Hero" class="absolute inset-0 w-full h-full object-cover opacity-30" src="https://images.unsplash.com/photo-1460364157752-926555421a7e?q=80&w=2000&auto=format&fit=crop"/>
     <div class="relative mx-auto max-w-5xl px-6 py-24 sm:py-28 text-center text-white">
-      <p class="uppercase tracking-[0.25em] text-sm/6 text-teal-200">You're invited</p>
+      <p class="uppercase tracking-[0.25em] text-sm/6 text-teal-200">!Estás invitado!</p>
       <h1 class="mt-4 font-display text-5xl sm:text-6xl md:text-7xl">Ale & Oscar</h1>
-      <p class="mt-6 text-base/7 sm:text-lg/8 opacity-90">Saturday • April 18, 2026 • CDMX</p>
+      <p class="mt-6 text-base/7 sm:text-lg/8 opacity-90">Sábado • 16 de mayo, 2026 • Manizales</p>
       <div class="mt-10 flex items-center justify-center gap-3">
         <a href="#rsvp" class="rounded-2xl px-5 py-3 bg-teal-300/90 hover:bg-teal-300 text-neutral-900 font-medium shadow">RSVP</a>
         <a href="#details" class="rounded-2xl px-5 py-3 border border-white/30 hover:border-white/80 font-medium">Details</a>
@@ -72,7 +72,7 @@
     </div>
     <script>
       // Set your wedding date/time (local time). Example: 2026-04-18 17:00 local
-      const weddingDate = new Date('2026-04-18T17:00:00');
+      const weddingDate = new Date('2026-05-16T17:00:00');
       const ids = ['d','h','m','s'];
       const tick = () => {
         const diff = weddingDate - new Date();
