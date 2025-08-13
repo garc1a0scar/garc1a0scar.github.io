@@ -17,7 +17,6 @@
       --accent:#111827;
       --ring:rgba(0,0,0,.08);
       --maxw:1080px;
-      --rose:#b45309;           /* accent for tiny details if desired */
     }
 
     /* Reset + base */
@@ -38,7 +37,7 @@
     .btn:hover{transform:translateY(-2px); box-shadow:0 8px 24px var(--ring)}
     .muted{color:var(--muted)}
 
-    /* Minimal top nav (sticky) */
+    /* Top nav */
     .nav{
       position:sticky; top:0; z-index:50; backdrop-filter:saturate(160%) blur(6px);
       background:rgba(255,255,255,.8); border-bottom:1px solid rgba(0,0,0,.06);
@@ -47,7 +46,7 @@
     .nav a{padding:.5rem .8rem; border-radius:.6rem}
     .nav a:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
 
-    /* Hero — softened scrim + no hidey fade */
+    /* Hero */
     .hero{
       position:relative; min-height:88svh; display:grid; place-items:center; overflow:clip;
       border-bottom:1px solid rgba(0,0,0,.06);
@@ -59,33 +58,31 @@
       filter:saturate(105%) contrast(102%);
     }
     .hero-scrim{
-      /* lighter scrim so text never looks washed out */
-      position:absolute; inset:0; 
-      background:linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.92) 65%);
+      position:absolute; inset:0;
+      /* darker overlay to avoid washout */
+      background:linear-gradient(180deg,
+        rgba(0,0,0,.55) 0%,
+        rgba(0,0,0,.42) 40%,
+        rgba(0,0,0,.30) 70%);
       pointer-events:none;
     }
-    .hero-content{ text-align:center; padding:4rem 1rem }
-    .title{font-size:clamp(2.6rem, 6vw, 4.5rem); line-height:1.08; letter-spacing:-.02em}
-    .subtitle{font-size:clamp(1rem, 1.8vw, 1.25rem); margin-top:.8rem}
+    .hero-content{ text-align:center; padding:4rem 1rem; color:#fff; }
 
-    /* Fancy animated title: per-letter rise + gentle shimmer */
-    .title-animated{
-      display:inline-block;
-      background:linear-gradient(90deg, #111 0%, #444 40%, #111 80%);
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      animation:shine 4s ease-in-out 0.6s infinite;
-      text-shadow:0 0 0 rgba(0,0,0,0); /* keep crisp edges on light bg */
+    .title{
+      font-size:clamp(2.6rem, 6vw, 4.5rem);
+      line-height:1.08; letter-spacing:-.02em;
+      will-change:transform, letter-spacing, opacity;
     }
-    @keyframes shine {
-      0%,100% { filter:brightness(1); }
-      50%     { filter:brightness(1.15); }
-    }
-    .title-animated .char{
-      display:inline-block; transform:translateY(14px); opacity:0;
-      animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards;
-    }
-    @keyframes rise{
-      to{ transform:none; opacity:1; }
+
+    /* Scroll-reactive title: driven by --t (0..1) */
+    .title-scroll{
+      --t: 0;
+      transform:
+        translateY(calc(var(--t) * -60px))
+        scale(calc(1 - var(--t) * .08));
+      letter-spacing: calc(-.02em + var(--t) * .02em);
+      opacity: calc(1 - var(--t) * .08);
+      text-shadow: 0 2px 14px rgba(0,0,0,.25);
     }
 
     /* Sections */
@@ -99,11 +96,11 @@
       box-shadow:0 4px 14px var(--ring);
     }
 
-    /* Reveal-on-scroll: softer (no initial invisibility for hero) */
+    /* Reveal-on-scroll */
     .reveal{opacity:0; transform:translateY(10px); transition:opacity .6s ease, transform .6s ease}
     .reveal.is-visible{opacity:1; transform:none}
 
-    /* ===== Our Story: horizontal snap timeline ===== */
+    /* Our Story: horizontal snap timeline */
     .timeline-wrap{
       overflow-x:auto; overflow-y:hidden; padding-bottom:1rem;
       scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
@@ -118,20 +115,15 @@
     .milestone img{ border-radius:.9rem; aspect-ratio:16/10; object-fit:cover }
     .milestone h3{ margin:.25rem 0 0; font-size:1.25rem; }
     .milestone .kicker{ font-size:.85rem; color:var(--muted); letter-spacing:.04em; text-transform:uppercase }
-
     .timeline-hint{ font-size:.9rem; color:var(--muted); text-align:center; margin-top:.75rem }
 
-    /* ===== On the Day: bold vertical schedule with photos ===== */
-    .day{
-      display:grid; gap:1.25rem;
-    }
+    /* Ese Día: big vertical schedule with photos */
+    .day{ display:grid; gap:1.25rem; }
     .slot{
       display:grid; gap:1rem; grid-template-columns: 140px 1fr; align-items:start;
       padding:1.25rem; border:1px solid rgba(0,0,0,.06); border-radius:1.25rem; background:#fff; box-shadow:0 4px 14px var(--ring);
     }
-    .time{
-      font-size:clamp(1.6rem, 3vw, 2rem); font-weight:700; letter-spacing:-.01em;
-    }
+    .time{ font-size:clamp(1.6rem, 3vw, 2rem); font-weight:700; letter-spacing:-.01em; }
     .slot img{ border-radius:.9rem; max-height:320px; width:100%; object-fit:cover }
     .slot h4{ margin:.1rem 0 .25rem; font-size:clamp(1.2rem, 2vw, 1.35rem) }
 
@@ -150,7 +142,7 @@
       .hero-media{transition:none}
       .reveal{transition:none}
       .btn{transition:none}
-      .title-animated, .title-animated .char{animation:none; opacity:1; transform:none}
+      .title-scroll{ transform:none; letter-spacing:-.02em; opacity:1; }
     }
   </style>
 </head>
@@ -174,8 +166,7 @@
     <div class="hero-media" id="heroMedia" aria-hidden="true"></div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="hero-content container">
-      <!-- animated title (no reveal class here) -->
-      <h1 class="title title-animated" id="animatedTitle">¡Nos casamos!</h1>
+      <h1 class="title title-scroll" id="heroTitle">¡Nos casamos!</h1>
       <p class="subtitle muted reveal" style="transition-delay:.06s">
         Acompáñanos el <strong>16 de Mayo, 2026</strong> en <strong>Manizales</strong>
       </p>
@@ -217,7 +208,6 @@
       <p class="muted reveal" style="margin-top:-.5rem">Desliza horizontalmente para ver los momentos ✨</p>
 
       <div class="timeline-wrap" aria-label="Timeline de nuestra historia">
-        <!-- Milestone 1 -->
         <article class="milestone">
           <span class="kicker">2019 · Primer encuentro</span>
           <img src="m1.jpg" alt="Donde nos conocimos">
@@ -227,7 +217,6 @@
           </div>
         </article>
 
-        <!-- Milestone 2 -->
         <article class="milestone">
           <span class="kicker">2020 · Primer viaje</span>
           <img src="m2.jpg" alt="Primer viaje juntos">
@@ -237,7 +226,6 @@
           </div>
         </article>
 
-        <!-- Milestone 3 -->
         <article class="milestone">
           <span class="kicker">2023 · ¡Dijo que sí!</span>
           <img src="m3.jpg" alt="Compromiso">
@@ -247,7 +235,6 @@
           </div>
         </article>
 
-        <!-- Milestone 4 -->
         <article class="milestone">
           <span class="kicker">2026 · Boda</span>
           <img src="m4.jpg" alt="Celebración">
@@ -260,7 +247,7 @@
       <div class="timeline-hint">Sugerencia: desliza ↔ o usa trackpad</div>
     </section>
 
-    <!-- On the Day: Vertical bold schedule with photos -->
+    <!-- Ese Día: Vertical schedule with photos -->
     <section id="details" class="container">
       <h2 class="reveal">Ese Día</h2>
       <div class="day">
@@ -324,20 +311,20 @@
   </footer>
 
   <script>
-    // Gentle parallax (kept subtle; never makes text disappear)
+    // Parallax for hero background (subtle)
     const media = document.getElementById('heroMedia');
     let lastY = 0;
-    const onScroll = () => {
+    function parallax(){
       const y = window.scrollY;
       const delta = Math.min(50, y * 0.06);
       if (delta !== lastY) {
-        media.style.transform = `translate3d(0, ${delta * -1}px, 0)`;
+        media.style.transform = `translate3d(0, ${-delta}px, 0)`;
         lastY = delta;
       }
-    };
-    window.addEventListener('scroll', onScroll, {passive:true});
+    }
+    window.addEventListener('scroll', parallax, {passive:true});
 
-    // Reveal-on-scroll (kept soft)
+    // Reveal-on-scroll
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{
         if (e.isIntersecting) {
@@ -348,7 +335,7 @@
     }, {threshold: 0.15});
     document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-    // Countdown (set your date/timezone)
+    // Countdown
     const target = new Date('2026-05-16T17:00:00-06:00');
     const out = document.getElementById('countdown');
     function tick(){
@@ -365,20 +352,18 @@
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ===== Animated Title: split letters & stagger =====
-    const wrapLetters = (el) => {
-      const text = el.textContent;
-      el.textContent = '';
-      [...text].forEach((ch, i) => {
-        const span = document.createElement('span');
-        span.className = 'char';
-        span.style.animationDelay = `${i*60}ms`;
-        span.textContent = ch;
-        el.appendChild(span);
-      });
-    };
-    const animatedTitle = document.getElementById('animatedTitle');
-    wrapLetters(animatedTitle);
+    // Scroll-driven title animation (0..1 progress)
+    const hero = document.querySelector('.hero');
+    const title = document.getElementById('heroTitle');
+    const max = 300; // px to reach full effect
+    const clamp = (v,min,max)=>Math.min(max,Math.max(min,v));
+    function updateTitle(){
+      const y = window.scrollY || 0;
+      const t = clamp(y / max, 0, 1);
+      title.style.setProperty('--t', t);
+    }
+    updateTitle();
+    window.addEventListener('scroll', updateTitle, {passive:true});
   </script>
 </body>
 </html>
